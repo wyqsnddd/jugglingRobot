@@ -1,0 +1,87 @@
+\documentclass[letterpaper, 10 pt, conference]{ieeeconf}  % Comment this line out
+\IEEEoverridecommandlockouts                              % This command is only
+% needed if you want to
+% use the \thanks command
+\overrideIEEEmargins
+\usepackage[ruled,lined,linesnumbered]{algorithm2e}
+\newtheorem{remark}{Remark}[section]
+
+
+\newcommand{\bs}{\boldsymbol}
+\usepackage{graphicx}
+\usepackage[font=small,labelfont=bf]{caption}
+\usepackage{subcaption}
+
+% \IEEEoverridecommandlockouts                              % This command is only
+% \overrideIEEEmargins
+\usepackage{amssymb,amsmath}
+% \usepackage{mathtools}
+\usepackage{hyperref}
+\newtheorem{Lemma}{Lemma}
+
+% correct bad hyphenation here
+\hyphenation{op-tical net-works semi-conduc-tor}
+
+\begin{document}
+\title{\LARGE \bf
+Real-time dual-arm ping-pong ball juggling robot simulation
+}
+\author{
+  Yuquan Wang, 
+  \thanks{
+    e-mail: \tt{ $\{$yuquan$\}$@kth.se}}
+}
+
+\maketitle
+\thispagestyle{empty}
+\pagestyle{empty}
+
+\begin{abstract}
+hwerd 
+\end{abstract}
+
+% \begin{keywords}
+%   parallel and branching structure; virtual kinematic chain; constraint-based programming;
+% \end{keywords}
+\IEEEpeerreviewmaketitle
+
+% ===============================================================================
+\section{Introduction and related work}
+\label{sec:intro}
+
+
+according to the early pioneers \cite{rizzi1992distributed}, we should model the
+striking process with proper flight dynamics of the ball and the impact dynamics
+between the ball and the racket. 
+
+The dual-arm coordination depending on the prediction of the ball, which could be used to design a feedforward controller. 
+   
+We prioritize the three juggling tasks using the cloest distance between the ball and the racket. 
+
+\section{Problem formulation}
+
+\subsection{Flight dynamics }
+point mass under gravity force:
+
+state space model: 
+\begin{equation}
+\label{eq:ss_ball_dynamics}
+\end{equation}
+We can construct an oberver of the flighting ball dynamics by feeding the discrete version of \eqref{eq:ss_ball_dynamics} as a state space model into a Kalman filter.  
+
+\subsection{Impact dynamics}
+
+\section{Proposed solution}
+
+
+mirror algorithm \cite{buehler1994planning}
+
+
+From the principal components in three-ball cascade juggling \cite{post2000principal}, we know that 
+
+While the increasing randamness could reduce the controllability of a system, it may also be useful to avoid staying at locally optimal solutions.
+
+\bibliographystyle{IEEEtran}
+\bibliography{ref}
+\end{document}
+
