@@ -1,0 +1,30 @@
+<package>
+  <description brief="handJacobian">
+
+     handJacobian
+
+  </description>
+  <author>Yuquan Wang</author>
+  <license>BSD</license>
+  <review status="unreviewed" notes=""/>
+  <url>http://ros.org/wiki/handJacobian</url>
+
+
+
+  <depend package="pr2_mechanism_model"/>
+
+  <depend package="roslib"/> 
+  <depend package="adjointMap"/> 
+  <!-- <depend package="kdl"/>  -->
+
+  <export>
+    <cpp cflags="-I${prefix}/common/include" lflags="-Wl,-rpath,${prefix}/ros/lib -L${prefix}/ros/lib -lhandJacobian"/>
+  </export>
+
+
+
+
+
+</package>
+
+
