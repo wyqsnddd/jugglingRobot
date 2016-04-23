@@ -1,0 +1,48 @@
+robotPaddlingController:
+  type: robotPaddlingController
+  # By default Its 1000 hz, but inside the jointVelocityController its slowed down to 100 hz. 
+  frequencyDivider: 10 # The excecution frequency will be 1000/frequencyDivider
+ # This is read from the Schunk light weight arm (using the safty controller limit):   
+  jointLower: [-0.5646,  -0.3536,  -0.65,   -2.1213,  -6.28319,   -1.994,  -6.28319,
+  -2.1353981634,  -0.3536,  -3.75,   -2.1213,  -6.28319,   -1.994,  -6.28319]
+  jointUpper: [2.1353,   1.2963,   3.75,   -0.15,   6.28319,   -0.1, 6.28319, 
+  0.564601836603,   1.2963,   0.65,   -0.15,   6.28319,   -0.1,   6.28319]
+  jointVLimits: [2.088,   2.082,   3.2700,   3.3000,   3.6000,   3.078,   3.6000]
+  # These are the tip end of the left/right gripper; The question is how to keep the grippers fixed and only move the arm joints. Read 
+  kdlParameters: {leftRootName: torso_lift_link, leftName: l_gripper_tool_frame}
+# --------------------------------------------------Set up Gurobi: 
+  methodIndicator: -1  # -1=automatic, 0=primal simplex(QP), 1=dual simplex(QP), 2=barrier(QP), 3=concurrent, 4=deterministic concurrent.
+  barHomogeneous: 0 # On: 1 Off: 0 
+# --------------------------------------------------Set up Constraints:
+# -------------------------------------------------Set up constraints for the parallel QP()
+# Probably mass of the grippers as well. 4 + 5? 
+  jointVelocityWeight: 20 
+ # armWeight: 3.0 
+  gainKEquality: 1.0
+  gainKInequality: 1.0
+  marginInequality: 0.1
+  # ----- vkc complaint constraint 
+  eeHeightConstraint: {start: false, weight: 8000, minHeight: 0.25}
+  # ---- Experiment setup 
+  # useRobotFrameIntension: true
+  tfPublish: {parentName: torso_lift_link, childName: vee_frame}
+  #----- Virtual grasp matrix: euler angle rotation in radions
+  graspMatrix: {tx: 0, ty: 0, tz: 0.1, rx: 10, ry: 0, rz: 0}
+  # velocity ellipsoid volume maximization
+  velocityEllipsoid: {active: false, bodyJacobian: false, numerical: false, weight: 300} 
+  velocityEllipsoidConstraint: {active: true, threshold: -0.02, margin: -0.01, gain: 3.0, weight: 1000} 
+  translationVelocityMaximization: {active: true, weight: 200, maximization: true}
+  surfaceNormalRotationVelocityMaximization: {active: true, weight: 200, maximization: true, computingWeight: false}
+  normalDisturbanceMaximization: {active: false, weight: 100, maximization: true}
+  surfaceNormalDisturbanceMinimization: {active: false, weight: 100, maximization: false}
+  quaternionConstraint: {start: false, weight: 1000, gain: 10.0}
+  orientationConstraint: {start: true, weight: 2500, bound: 0.52, margin: 0.02 }
+  #orientationConstraint: {start: true, weight: 1000, bound: 0.52, margin: 0.02 }
+  #translationConstraint: {start: true, weight: 4000 , gain: 5.0, offsetTx: -0.25, offsetTy: 0.0, offsetTz: -0.1}
+  translationConstraint: {start: true, weight: 10000, gain: 5.0, offsetTx: -0.25, offsetTy: 0.0, offsetTz: -0.1}
+  #translationConstraint: {start: true, weight: 4000 , gain: 5.0, offsetTx: -0.25, offsetTy: 0.0, offsetTz: -0.1}
+  oneDofTranslationConstraint: {start: false, weight: 4000, gain: 5.0}
+  lissaCurve: {pseudoTime: true, amplitudeX: 0.1, amplitudeY: 0.1, frequencyX: 0.03, frequencyY: 0.02,  offsetX: 0.7853, offsetY: 0.0}
+  toolGeometry: {active: true, tx: 0.05, ty: 0.0, tz: 0.0, rx: 0.0, ry: 0.0, rz: 20}
+  constraintAngle: {active: true} 
+  tfPublish: {parentName: torso_lift_link, childName: workingpieceFrame, parentNameTooltip: torso_lift_link, childNameTooltip: tooltipFrame, parentNameDesiredPoint: torso_lift_link, childNameDesiredPoint: desiredPointFrame}

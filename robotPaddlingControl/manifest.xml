@@ -16,8 +16,14 @@
   <rosdep name="eigen" />
  
 
-  <depend package="realtime_tools"/>
+  <depend package="handJacobian"/>
+  <depend package="adjointMap"/>
+  <depend package="graspMatrix"/>
 
+  <depend package="singleArmTranslationConstraint"/> 
+  <depend package="singleArmQuaternionConstraint"/> 
+
+  <depend package="realtime_tools"/>
 </package>
 
 

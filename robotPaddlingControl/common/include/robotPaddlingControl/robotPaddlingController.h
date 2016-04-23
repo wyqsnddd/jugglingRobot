@@ -2,13 +2,82 @@
 #define ROBOTPADDLINGCONTROLLER_H
 
 /**
- * @file dumbo_Multi_obj_qp.h
+ * @file robotPaddlingController.h
  * This is the header of the robot paddling controller class, which implements a constrained quadratic optimization method. 
  * @author Yuquan 
  */
 
 
+#include <signal.h>
+#include <exception>
+# include <sstream>
+# include <iostream>
+# include <fstream>
+# include <realtime_tools/realtime_publisher.h> 
 
+# include <gurobi_c++.h> 
+
+
+#include <ros/ros.h>
+#include <brics_actuator/JointVelocities.h>
+/* #include <pr2_controllers_msgs/JointTrajectoryControllerState.h> */
+#include <sensor_msgs/JointState.h>
+
+# include <exception>
+# include <std_msgs/Float64.h>
+# include <std_msgs/Float32MultiArray.h>
+
+
+# include <boost/assert.hpp>
+# include <boost/bind.hpp>
+# include <boost/multi_array.hpp>
+# include <boost/scoped_ptr.hpp>
+# include <boost/shared_ptr.hpp>
+
+#include <Eigen/Geometry>
+
+# include <handJacobian/handJacobian.h>
+# include <graspMatrix/graspMatrix.h>
+# include <adjointMap/adjointMap.h>
+
+# include <singleArmTranslationConstraint/singleArmTranslationConstraint.h>
+# include <singleArmQuaternionConstraint/singleArmQuaternionConstraint.h>
+
+# include "rostopicCommunication.h"
+
+/* enum{ */
+/*   DOF = 7 */
+/* }; */
+
+
+class robotPaddlingController{
+ public:
+  EIGEN_MAKE_ALIGNED_OPERATOR_NEW
+
+ private: 
+
+
+
+   void readParameters();
+
+   /* bool isInitialized() */
+   /* { */
+   /*   return initializedKDL_; */
+   /* } */
+
+
+ public:    
+ robotPaddlingController(){   
+
+ }
+
+ ~robotPaddlingController(){   
+
+
+ }
+
+
+};
 
 
 # endif

@@ -10,9 +10,9 @@ include($ENV{ROS_ROOT}/core/rosbuild/rosbuild.cmake)
 #set(ROS_BUILD_TYPE RelWithDebInfo)
 
 rosbuild_init()
-if( CMAKE_COMPILER_IS_GNUCC OR CMAKE_COMPILER_IS_GNUCXX )
-  add_definitions("-fno-strict-aliasing -lstdc++ -O4") 
-endif(CMAKE_COMPILER_IS_GNUCC OR CMAKE_COMPILER_IS_GNUCXX)
+#if( CMAKE_COMPILER_IS_GNUCC OR CMAKE_COMPILER_IS_GNUCXX )
+#  add_definitions("-fno-strict-aliasing -lstdc++ -O4") 
+#endif(CMAKE_COMPILER_IS_GNUCC OR CMAKE_COMPILER_IS_GNUCXX)
 
 
 #set the default path for built executables to the "bin" directory
@@ -47,6 +47,11 @@ list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
 include(cmake/FindEigen.cmake)
 include_directories(${EIGEN_INCLUDE_DIRS})
 
+set(BOOST_LIBS_ME system thread date_time filesystem iostreams python )
+rosbuild_add_boost_directories()
+
+include_directories(${PROJECT_SOURCE_DIR}/common/include)
+link_directories(${PROJECT_SOURCE_DIR}/ros/lib)
 
 #common commands for building c++ executables and libraries
 #rosbuild_add_library(${PROJECT_NAME} src/example.cpp)
@@ -58,6 +63,7 @@ include_directories(${EIGEN_INCLUDE_DIRS})
 
 
 rosbuild_add_executable(robotPaddlingController
-  common/src/robotPaddlingController.cpp)
+  common/src/robotPaddlingController.cpp
+  common/src/rostopicCommunication.cpp)
 rosbuild_link_boost(robotPaddlingController ${BOOST_LIBS_ME}) 
 target_link_libraries(robotPaddlingController ${GUROBI_LIBRARIES})
