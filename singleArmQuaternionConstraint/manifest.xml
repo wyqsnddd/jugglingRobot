@@ -1,0 +1,24 @@
+<package>
+  <description brief="singleArmQuaternionConstraint">
+
+     singleArmQuaternionConstraint
+
+  </description>
+  <author>Yuquan Wang</author>
+  <license>BSD</license>
+  <review status="unreviewed" notes=""/>
+  <url>http://ros.org/wiki/singleArmQuaternionConstraint</url>
+
+  <depend package="gurobiConstraint"/> 
+  <depend package="handJacobian"/> 
+  <depend package="graspMatrix"/> 
+  <depend package="adjointMap"/> 
+ 
+  <export>
+    <cpp cflags="-I${prefix}/common/include" lflags="-Wl,-rpath,${prefix}/ros/lib -L${prefix}/ros/lib -lsingleArmQuaternionConstraint"/>
+  </export>
+
+
+</package>
+
+
