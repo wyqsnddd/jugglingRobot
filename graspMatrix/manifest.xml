@@ -1,0 +1,28 @@
+<package>
+  <description brief="graspMatrix">
+
+     graspMatrix
+
+  </description>
+  <author>Yuquan Wang</author>
+  <license>BSD</license>
+  <review status="unreviewed" notes=""/>
+  <url>http://ros.org/wiki/graspMatrix</url>
+
+
+ <depend package="adjointMap"/> 
+
+
+
+
+  <export>
+    <cpp cflags="-I${prefix}/common/include" lflags="-Wl,-rpath,${prefix}/ros/lib -L${prefix}/ros/lib -lgraspMatrix"/>
+  </export>
+
+
+
+
+
+</package>
+
+
