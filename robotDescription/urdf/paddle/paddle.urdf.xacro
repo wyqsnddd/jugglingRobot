@@ -15,7 +15,7 @@
 
      <link name="${name}_racket_link">
        <visual>
-	<origin xyz="0 ${paddle_handle_length_y/2} ${paddle_handle_length_z/2}" rpy="0 0 0" />
+	<origin xyz="0 ${paddle_handle_length_y/2} ${paddle_handle_length_z/2}" rpy="${PI/2} 0 0" />
          <geometry>
            <cylinder length="${paddle_racket_thickness}" radius="${paddle_racket_radius}"/>
         </geometry>
@@ -23,13 +23,13 @@
        </visual>
     
       <inertial>
-	<origin xyz="0 ${paddle_handle_length_y/2} ${paddle_handle_length_z/2}" rpy="0 0 0" />
+	<origin xyz="0 ${paddle_handle_length_y/2} ${paddle_handle_length_z/2}" rpy="${PI/2} 0 0" />
 	<mass value="1.0" />
 	<inertia ixx="0.01" ixy="0" ixz="0" iyy="0.01" iyz="0" izz="0.01" />
       </inertial>
 
        <collision>
-	<origin xyz="0 ${paddle_handle_length_y/2} ${paddle_handle_length_z/2}" rpy="0 0 0" />
+	<origin xyz="0 ${paddle_handle_length_y/2} ${paddle_handle_length_z/2}" rpy="${PI/2} 0 0" />
          <geometry>
            <cylinder length="${paddle_racket_thickness}" radius="${paddle_racket_radius}"/>
         </geometry>
