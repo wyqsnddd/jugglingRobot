@@ -16,6 +16,8 @@
   <rosdep name="eigen" />
  
 
+  <depend package="pluginlib"/>
+
   <depend package="handJacobian"/>
   <depend package="adjointMap"/>
   <depend package="graspMatrix"/>
@@ -24,6 +26,16 @@
   <depend package="singleArmQuaternionConstraint"/> 
 
   <depend package="realtime_tools"/>
+
+  <export>
+    <cpp cflags="-I${prefix}/common/include " lflags=" -Wl,-rpath,${prefix}/ros/lib -L${prefix}/ros/lib -lrostopicCommunication" />
+  </export>
+   <export>
+    <cpp cflags="-I${prefix}/common/include " lflags=" -Wl,-rpath,${prefix}/ros/lib -L${prefix}/ros/lib -lrobotPaddlingController" />
+  </export>
+ 
+
+
 </package>
 
 

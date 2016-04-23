@@ -43,7 +43,7 @@
 # include <singleArmTranslationConstraint/singleArmTranslationConstraint.h>
 # include <singleArmQuaternionConstraint/singleArmQuaternionConstraint.h>
 
-# include "rostopicCommunication.h"
+# include <rostopicCommunication/rostopicCommunication.h>
 
 /* enum{ */
 /*   DOF = 7 */
@@ -55,10 +55,8 @@ class robotPaddlingController{
   EIGEN_MAKE_ALIGNED_OPERATOR_NEW
 
  private: 
-
-
-
-   void readParameters();
+   ros::NodeHandle n_;
+   void readTaskParameters();
 
    /* bool isInitialized() */
    /* { */
@@ -66,17 +64,27 @@ class robotPaddlingController{
    /* } */
 
 
+   std::vector<double> jointPosL_;
+   std::vector<double> jointPosR_;
+ 
+   std::vector<double> dualDofLower_; ///< Lower bounds of the joint limits of the two arms 
+   std::vector<double> dualDofUpper_; ///< Upper bounds of the joint limits of the two arms 
+   std::vector<double> dualDofVLimits_; ///< Joint velocity bounds of the joi
+
+   boost::shared_ptr<rostopicCommunication> commmunicationPointer_;   
+   
  public:    
- robotPaddlingController(){   
+   robotPaddlingController();   
 
- }
+   ~robotPaddlingController(){   
+   
 
- ~robotPaddlingController(){   
+   }
 
-
- }
-
-
+   bool isOK(){
+     return n_.ok();
+   }
+   void publishJointVelocities();
 };
 
 

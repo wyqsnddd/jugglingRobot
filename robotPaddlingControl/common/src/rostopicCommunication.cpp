@@ -1,4 +1,4 @@
-# include "rostopicCommunication.h"
+# include <rostopicCommunication/rostopicCommunication.h>
 
 rostopicCommunication::rostopicCommunication(){
   n_ = ros::NodeHandle("~");

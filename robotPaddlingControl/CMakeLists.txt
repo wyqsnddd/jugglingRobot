@@ -62,8 +62,19 @@ link_directories(${PROJECT_SOURCE_DIR}/ros/lib)
 #target_link_libraries(example ${PROJECT_NAME})
 
 
-rosbuild_add_executable(robotPaddlingController
-  common/src/robotPaddlingController.cpp
-  common/src/rostopicCommunication.cpp)
+rosbuild_add_library(robotPaddlingController
+  common/src/robotPaddlingController.cpp)
 rosbuild_link_boost(robotPaddlingController ${BOOST_LIBS_ME}) 
 target_link_libraries(robotPaddlingController ${GUROBI_LIBRARIES})
+
+rosbuild_add_library(rostopicCommunication
+  common/src/rostopicCommunication.cpp)
+rosbuild_link_boost(rostopicCommunication ${BOOST_LIBS_ME}) 
+
+
+rosbuild_add_executable(rosPaddlingControlNode
+  common/src/robotPaddlingControlNode.cpp
+  common/src/robotPaddlingController.cpp
+  common/src/rostopicCommunication.cpp)
+rosbuild_link_boost(rosPaddlingControlNode ${BOOST_LIBS_ME}) 
+
