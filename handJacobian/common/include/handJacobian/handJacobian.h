@@ -7,27 +7,28 @@
 # include <fstream>
 /* # include <string.h> */
 /* # include <stdio.h> */
+#include <vector>
 
-# include <pr2_mechanism_model/chain.h>
-# include <pr2_mechanism_model/robot.h>
-
-# include <boost/shared_ptr.hpp>
+# include <boost/scoped_ptr.hpp>
 # include <boost/thread/condition.hpp>
 
-
+#include <kdl/tree.hpp>
+#include <kdl/kdl.hpp>
 # include <kdl/chain.hpp>
+# include <kdl/chainiksolvervel_wdls.hpp>
 # include <kdl/chainjnttojacsolver.hpp>
 # include <kdl/chainfksolverpos_recursive.hpp>
+#include <urdf/model.h>
+#include <kdl_parser/kdl_parser.hpp>
+
+
 # include <kdl/frames.hpp>
 # include <kdl/jacobian.hpp>
 # include <kdl/jntarray.hpp>
 # include <kdl/jntarrayvel.hpp>
 # include <Eigen/Geometry>
 
-/* #include <pr2_mechanism_model/kinematichelpers.h> */
-
 # include <adjointMap/adjointMap.h>
-/* # include <jacobianNumericalGradient/jacobianNumericalGradient.h> */
 
 class handJacobian{
  public:
@@ -39,59 +40,64 @@ class handJacobian{
     DOF = 7,
   };
 
-
-  pr2_mechanism_model::Chain chain_;  
-  /* pr2_mechanism_model::KinematicHelpers kin_; */
-
   Eigen::Matrix<double, 6, DOF> spatialJacobian_;
   Eigen::Matrix<double, 6, DOF> bodyJacobian_;
   Eigen::Affine3d spatialTransform_; 
       
 
 
-  boost::shared_ptr<KDL::ChainJntToJacSolver> jntToJacSolver_;      
-  boost::shared_ptr<KDL::ChainFkSolverPos>    jntToPoseSolver_;
+
+  boost::scoped_ptr<KDL::ChainIkSolverVel_wdls> ikSolver_;
+  boost::scoped_ptr<KDL::ChainJntToJacSolver> jntToJacSolver_;
+  boost::scoped_ptr<KDL::ChainFkSolverPos> jntToPoseSolver_;
+
+
   KDL::JntArray jointPos_;
+  
+  KDL::Chain armChain_;
+
 
   adjointMap * adjointMapP_; 
   
-  void updateJointPositions();	  
+  void updateJointPositions(std::vector<double> &jointPosition);	  
 
   void kdlJacToEigen(const KDL::Jacobian jac, Eigen::Matrix<double, 6, DOF> &jacEigen);
   void updateSpatialJacobian();
   void updateSpatialTransform();
   void kdlTransformToEigen(const KDL::Frame transform, Eigen::Affine3d &transformEigen);
-  // How to add the adjointMap? 
       
+// initializes the chain using the tip of the tool frame
+  bool initializeChain_(ros::NodeHandle *n,
+			std::string chainTip,
+			std::string chainRoot = "arm_base_link");
+
+  bool getTreeFromURDF_(ros::NodeHandle *n, KDL::Tree &tree);
+	
  public:
   // constructors: 
-  handJacobian(pr2_mechanism_model::RobotState *robot, std::string &rootName, std::string &leafName);
-  /* handJacobian(const int & input  ){ */
-  /* handJacobian(const char* inString){ */
-  /*   std::string foo("noConstruction"); */
-    /* if(!(input==1001)) */
-    /*   throw "illeagal argument."; */
-  /* } */
+  handJacobian(
+	       ros::NodeHandle *n, std::string &rootName, std::string &leafName);
+
   ~handJacobian(){
     free(adjointMapP_);
     /* std::cout<<"deconstructing handJacobian"<<std::endl; */
   }
   // update
-  void update();
+  void update(std::vector<double> &jointPosition);
 
   // readers: 
   KDL::JntArray readJointPositions() const{
     return jointPos_;
   }
-  std::vector<double>  readJointVelocities(){
-    std::vector<double> jointV;
-    jointV.resize(DOF);
-    jointV.assign(DOF, 0);
+  /* std::vector<double>  readJointVelocities(){ */
+  /*   std::vector<double> jointV; */
+  /*   jointV.resize(DOF); */
+  /*   jointV.assign(DOF, 0); */
     
-    chain_.getVelocities(jointV);
+  /*   armChain_.getVelocities(jointV); */
       
-    return jointV;
-  }
+  /*   return jointV; */
+  /* } */
   Eigen::Affine3d readTransform() const {
     return spatialTransform_;
   }

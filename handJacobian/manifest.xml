@@ -9,10 +9,8 @@
   <review status="unreviewed" notes=""/>
   <url>http://ros.org/wiki/handJacobian</url>
 
-
-
-  <depend package="pr2_mechanism_model"/>
-
+  <depend package="kdl_parser"/>
+  <depend package="urdf" />
   <depend package="roslib"/> 
   <depend package="adjointMap"/> 
   <!-- <depend package="kdl"/>  -->
