@@ -1,0 +1,59 @@
+<?xml version="1.0"?>
+<robot>
+
+  <property name="ROBOT_LINK1_LENGTH" value="0.268" />	
+
+  <!-- DH parameters -->
+  <property name="ROBOT_DH_ALPHA_0" value="0.0" />
+  <property name="ROBOT_DH_ALPHA_1" value="${-90*PI/180}" />
+  <property name="ROBOT_DH_ALPHA_2" value="${-90*PI/180}" />	    
+  <property name="ROBOT_DH_ALPHA_3" value="${-90*PI/180}" />
+  <property name="ROBOT_DH_ALPHA_4" value="${-90*PI/180}" />
+  <property name="ROBOT_DH_ALPHA_5" value="${-90*PI/180}" />
+  <property name="ROBOT_DH_ALPHA_6" value="${-90*PI/180}" />
+  <property name="ROBOT_DH_ALPHA_7" value="${-90*PI/180}" />
+
+  <property name="ROBOT_DH_A_0" value="0.0" />
+  <property name="ROBOT_DH_A_1" value="0.0" />
+  <property name="ROBOT_DH_A_2" value="0.0" />
+  <property name="ROBOT_DH_A_3" value="0.0" />
+  <property name="ROBOT_DH_A_4" value="0.0" />
+  <property name="ROBOT_DH_A_5" value="0.0" />
+  <property name="ROBOT_DH_A_6" value="0.0" />
+  <property name="ROBOT_DH_A_7" value="0.0" />
+
+  <property name="ROBOT_DH_D_1" value="0.0" />
+  <property name="ROBOT_DH_D_2" value="0.0" />
+  <property name="ROBOT_DH_D_3" value="0.318" />
+  <property name="ROBOT_DH_D_4" value="0.0" />
+  <property name="ROBOT_DH_D_5" value="0.2765" />
+  <property name="ROBOT_DH_D_6" value="0.0" />
+  <property name="ROBOT_DH_D_7" value="0.0" />
+  <property name="ROBOT_DH_D_8" value="0.0" />
+
+  <property name="ROBOT_DH_THETA_1" value="0.0" />
+  <property name="ROBOT_DH_THETA_2" value="${PI}" />
+  <property name="ROBOT_DH_THETA_3" value="${PI}" />
+  <property name="ROBOT_DH_THETA_4" value="${PI}" />
+  <property name="ROBOT_DH_THETA_5" value="${PI}" />
+  <property name="ROBOT_DH_THETA_6" value="${PI}" />
+  <property name="ROBOT_DH_THETA_7" value="${PI}" />
+  <property name="ROBOT_DH_THETA_8" value="0.0" />
+
+
+  <!-- Used for defining the tool frame for PG70 gripper-->
+  <property name="ROBOT_TOOL_LENGTH" value="0.414848" />
+
+  <!-- Dumbo arm tip -->
+  <property name="ROBOT_ARM_TIP" value="0.251348" />
+
+  <!-- Schunk module dimensions -->
+  <property name="PRL100_radius" value="0.051" />
+  <property name="PRL100_length" value="0.16" />
+  <property name="PRL80_radius" value="0.045" />
+  <property name="PRL80_length" value="0.17" />
+
+  <!-- FT sensor distance from joint 7-->
+  <property name="FT_sensor_distance" value="0.219848"/>
+
+</robot>

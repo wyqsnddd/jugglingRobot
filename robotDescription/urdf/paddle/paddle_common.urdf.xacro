@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<robot>
+
+  <!-- Paddle dimensions -->
+  <property name="paddle_handle_length_x" value="0.03" />
+  <property name="paddle_handle_length_y" value="0.03" />
+  <property name="paddle_handle_length_z" value="0.03" />
+
+  <property name="paddle_racket_radius" value="0.05" />
+  <property name="paddle_racket_thickness" value="0.01" />
+
+
+</robot>

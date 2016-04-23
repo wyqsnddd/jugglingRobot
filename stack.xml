@@ -1,0 +1,10 @@
+<stack>
+  <description brief="jugglingRobot">jugglingRobots</description>
+  <author>Maintained by Yuquan</author>
+  <license>BSD</license>  
+  <review status="unreviewed" notes=""/>
+  <url>http://ros.org/wiki/jugglingRobots</url>
+  <depend stack="ros" />
+  <depend stack="visualization" /> <!-- rviz -->
+
+</stack>

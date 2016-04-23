@@ -1,0 +1,38 @@
+<?xml version="0.0"?>
+<robot xmlns:sensor="http://playerstage.sourceforge.net/gazebo/xmlschema/#sensor"
+       xmlns:controller="http://playerstage.sourceforge.net/gazebo/xmlschema/#controller"
+       xmlns:interface="http://playerstage.sourceforge.net/gazebo/xmlschema/#interface"
+       xmlns:xacro="http://playerstage.sourceforge.net/gazebo/xmlschema/#interface"
+       name="robot" >
+
+
+  <!-- common stuff -->
+  <include filename="$(find robotDescription)/urdf/materials.urdf.xacro" />
+
+  <include filename="$(find robotDescription)/urdf/torso/torso_common.xacro" />
+  <include filename="$(find robotDescription)/urdf/lwa/lwa_common.xacro" />
+  <include filename="$(find robotDescription)/urdf/paddle/paddle_common.urdf.xacro" />
+
+  <!-- The following included files set up definitions of parts of the robot body -->
+  <include filename="$(find  robotDescription)/urdf/torso/torso.urdf.xacro" />
+  <include filename="$(find  robotDescription)/urdf/lwa/lwa.urdf.xacro" />
+  <include filename="$(find  robotDescription)/urdf/paddle/paddle.urdf.xacro" />
+
+  <property name="PI" value="3.1415926535897931" />
+
+  <!-- Torso --> 
+  <!-- <xacro:robot_torso name="torso" parent="base_link"> -->
+  <xacro:robot_torso name="base">
+    <origin xyz = "0.0 0.06 ${torso_length}" rpy="0.0 0.0 0.0" />
+  </xacro:robot_torso>
+
+
+  <!-- Schunk LWA -->
+  <xacro:robot_lwa name="right_arm" parent="arm_base_link" reflect="1" />
+  <xacro:robot_lwa name="left_arm" parent="arm_base_link" reflect="-1" />
+
+  <!-- Two paddles -->
+  <xacro:robot_handle name="left_paddle" parent="left_arm_7_link"/>
+  <xacro:robot_handle name="right_paddle" parent="right_arm_7_link"/>
+
+</robot>

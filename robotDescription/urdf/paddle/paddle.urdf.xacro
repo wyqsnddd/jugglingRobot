@@ -1,0 +1,82 @@
+<?xml version="1.0"?>
+<robot xmlns:sensor="http://playerstage.sourceforge.net/gazebo/xmlschema/#sensor"
+       xmlns:controller="http://playerstage.sourceforge.net/gazebo/xmlschema/#controller"
+       xmlns:interface="http://playerstage.sourceforge.net/gazebo/xmlschema/#interface"
+       xmlns:xacro="http://ros.org/wiki/xacro">
+
+
+  <!-- racket -->
+  <xacro:macro name="robot_racket" params="name parent">
+    <joint name="${name}_racket_joint" type="fixed">
+      <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0" />
+      <parent link="${parent}" />
+      <child link="${name}_racket_link" />
+    </joint>
+
+     <link name="${name}_racket_link">
+       <visual>
+	<origin xyz="0 ${paddle_handle_length_y/2} ${paddle_handle_length_z/2}" rpy="0 0 0" />
+         <geometry>
+           <cylinder length="${paddle_racket_thickness}" radius="${paddle_racket_radius}"/>
+        </geometry>
+	<material name="Grey" />	
+       </visual>
+    
+      <inertial>
+	<origin xyz="0 ${paddle_handle_length_y/2} ${paddle_handle_length_z/2}" rpy="0 0 0" />
+	<mass value="1.0" />
+	<inertia ixx="0.01" ixy="0" ixz="0" iyy="0.01" iyz="0" izz="0.01" />
+      </inertial>
+
+       <collision>
+	<origin xyz="0 ${paddle_handle_length_y/2} ${paddle_handle_length_z/2}" rpy="0 0 0" />
+         <geometry>
+           <cylinder length="${paddle_racket_thickness}" radius="${paddle_racket_radius}"/>
+        </geometry>
+	<material name="Grey" />	
+       </collision>
+
+    </link>
+
+  </xacro:macro>
+
+
+
+  <!-- macro for creating a handle -->
+  <xacro:macro name="robot_handle" params="name parent">
+
+    <!-- ==================== tool ==================== -->
+    <joint name="${name}_handle_joint" type="fixed">
+      <origin xyz="0.0 0.0 ${ROBOT_TOOL_LENGTH}" rpy="0.0 0.0 0.0" />
+      <parent link="${parent}" />
+      <child link="${name}_handle_link" />
+    </joint>
+
+    <link name="${name}_handle_link">
+      <inertial>
+	<origin xyz="0 0 ${-paddle_racket_radius - paddle_handle_length_z/2}" rpy="0 0 0" />
+	<mass value="1.0" />
+	<inertia ixx="0.01" ixy="0" ixz="0" iyy="0.01" iyz="0" izz="0.01" />
+      </inertial>
+
+      <visual>
+	<origin xyz="0 0 ${-paddle_racket_radius - paddle_handle_length_z/2}" rpy="0 0 0" />
+	<geometry>
+	  <box size="${paddle_handle_length_x} ${paddle_handle_length_y} ${paddle_handle_length_z}" />
+	</geometry>
+	<material name="Black" />	
+      </visual>
+
+      <collision>
+	<origin xyz="0 0 ${-paddle_racket_radius - paddle_handle_length_z/2}" rpy="0 0 0" />
+	<geometry>
+	  <box size="${paddle_handle_length_x+0.02} ${paddle_handle_length_y+0.02} ${paddle_handle_length_z+0.02}" />
+	</geometry>
+      </collision>
+    </link>
+    
+    <xacro:robot_racket name="${name}" parent="${name}_handle_link" />
+
+  </xacro:macro>
+
+</robot>

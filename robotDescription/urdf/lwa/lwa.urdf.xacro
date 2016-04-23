@@ -1,0 +1,312 @@
+<?xml version="1.0"?>
+<robot xmlns:sensor="http://playerstage.sourceforge.net/gazebo/xmlschema/#sensor"
+       xmlns:controller="http://playerstage.sourceforge.net/gazebo/xmlschema/#controller"
+       xmlns:interface="http://playerstage.sourceforge.net/gazebo/xmlschema/#interface"
+       xmlns:xacro="http://ros.org/wiki/xacro">
+
+
+  <!-- macro for creating a schunk LWA.
+       reflect = 1 for right arm, -1 for the left arm -->
+  <xacro:macro name="robot_lwa" params="name parent reflect">
+    
+    <!-- joint between arm_base_link and arm_0_link -->
+    <joint name="${name}_0_joint" type="fixed" >
+      <origin xyz="${reflect*ROBOT_LINK1_LENGTH} 0.0 0.0" rpy="${PI/2} 0.0 ${reflect*PI/2}" />
+      <parent link="${parent}" />
+      <child link="${name}_0_link" />
+    </joint>
+
+    <link name="${name}_0_link">
+      <inertial>
+	<origin xyz="0 0 0" rpy="0 0 0"/>
+	<mass value="1.0"/>
+	<inertia ixx="0.01" ixy="0" ixz="0" iyy="0.01" iyz="0" izz="0.01" />
+      </inertial>
+
+      <visual>
+	<origin xyz="0 0 0" rpy="0 0 0" />
+	<geometry>
+	  <cylinder radius="0.0001" length="0.0001"/>
+	</geometry>
+      </visual>
+    </link>
+
+
+    <!-- ==================== joint 1 ==================== -->
+    <joint name="${name}_1_joint" type="revolute">
+      <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0" />
+      <axis xyz="0 0 1" />
+      <calibration rising="0.0"/>
+      <parent link="${name}_0_link" />
+      <child link="${name}_1_link" />
+      <limit effort="370" velocity="${30*PI/180}" lower="${-180*PI/180}" upper="${180*PI/180}"/>
+      <safety_controller k_position="100" k_velocity="10" soft_lower_limit="${-180*PI/180 + 2*PI/180}" soft_upper_limit="${180*PI/180 - 2*PI/180}" />
+    </joint>
+
+    <link name="${name}_1_link">
+      <inertial>
+	<origin xyz="0 0 ${-ROBOT_LINK1_LENGTH/2 + middle_plate_length_x/4 - PRL100_radius/2}" rpy="0.0 0.0 0.0"/>
+	<mass value="1.0"/>
+	<inertia ixx="0.01" ixy="0" ixz="0" iyy="0.01" iyz="0" izz="0.01" />
+      </inertial>
+
+      <visual>
+	<origin xyz="0 0 ${-ROBOT_LINK1_LENGTH/2 + middle_plate_length_x/4 - PRL100_radius/2}" rpy="0.0 0.0 0.0" />
+	<geometry>
+	  <cylinder radius="${PRL100_radius}" length="${PRL100_length}"/>
+	</geometry>
+	<material name="Yellow" />
+      </visual>
+
+      <collision>
+	<origin xyz="0 0 ${-ROBOT_LINK1_LENGTH/2 + middle_plate_length_x/4 - PRL100_radius/2 + 0.02}" rpy="0 0 0" />
+	<geometry>
+	  <cylinder radius="${PRL100_radius+0.02}" length="${PRL100_length+0.02}"/>
+	</geometry>
+      </collision>
+    </link>
+
+
+    <!-- ==================== joint 2 ==================== -->
+    <joint name="${name}_2_joint" type="revolute">
+      <origin xyz="0.0 0.0 0.0" rpy="${-PI/2} ${PI} 0.0" />
+      <axis xyz="0 0 1" />
+      <calibration rising="0.0"/>
+      <parent link="${name}_1_link" />
+      <child link="${name}_2_link" />
+      <limit effort="370" velocity="${30*PI/180}" lower="${-120*PI/180}" upper="${120*PI/180}"/>
+      <safety_controller k_position="100" k_velocity="10" soft_lower_limit="${-120*PI/180 + 2*PI/180}" soft_upper_limit="${120*PI/180 - 2*PI/180}" />
+    </joint>
+
+    <link name="${name}_2_link">
+      <inertial>
+	<origin xyz="0 0 0" rpy="0 0 0"/>
+	<mass value="1.0"/>
+	<inertia ixx="0.01" ixy="0" ixz="0" iyy="0.01" iyz="0" izz="0.01" />
+      </inertial>
+
+      <visual>
+	<origin xyz="0 0 0" rpy="0 0 0" />
+	<geometry>
+	  <cylinder radius="${PRL100_radius}" length="${PRL100_length}"/>
+	</geometry>
+	<material name="Black" />
+      </visual>
+
+      <collision>
+	<origin xyz="0 0 0" rpy="0 0 0" />
+	<geometry>
+	  <cylinder radius="${PRL100_radius+0.02}" length="${PRL100_length+0.02}"/>
+	</geometry>
+      </collision>
+    </link>
+
+
+    <!-- ==================== joint 3 ==================== -->
+    <joint name="${name}_3_joint" type="revolute">
+      <origin xyz="0.0 ${ROBOT_DH_D_3} 0.0" rpy="${PI/2} 0.0 ${PI}" />
+      <axis xyz="0 0 1" />
+      <calibration rising="0.0"/>
+      <parent link="${name}_2_link" />
+      <child link="${name}_3_link" />
+      <limit effort="370" velocity="${30*PI/180}" lower="${-PI}" upper="${PI}"/>
+      <safety_controller k_position="100" k_velocity="10" soft_lower_limit="${-PI + 2*PI/180}" soft_upper_limit="${PI - 2*PI/180}" />
+    </joint>
+
+    <link name="${name}_3_link">
+      <inertial>
+	<origin xyz="0 0 ${-ROBOT_DH_D_3/2}" rpy="0 0 0"/>
+	<mass value="1.0"/>
+	<inertia ixx="0.01" ixy="0" ixz="0" iyy="0.01" iyz="0" izz="0.01" />
+      </inertial>
+
+      <visual>
+	<origin xyz="0 0 ${-ROBOT_DH_D_3/2}" rpy="0 0 0" />
+	<geometry>
+	  <cylinder radius="${PRL100_radius}" length="${PRL100_length}"/>
+	</geometry>
+	<material name="Yellow" />
+      </visual>
+
+      <collision>
+	<origin xyz="0 0 ${-ROBOT_DH_D_3/2}" rpy="0 0 0" />
+	<geometry>
+	  <cylinder radius="${PRL100_radius+0.02}" length="${PRL100_length+0.05}"/>
+	</geometry>
+      </collision>
+    </link>
+
+
+    <!-- ==================== joint 4 ==================== -->
+    <joint name="${name}_4_joint" type="revolute">
+      <origin xyz="0.0 0.0 0.0" rpy="${-PI/2} ${PI} 0.0" />
+      <axis xyz="0 0 1" />
+      <calibration rising="0.0"/>
+      <parent link="${name}_3_link" />
+      <child link="${name}_4_link" />
+      <limit effort="370" velocity="${30*PI/180}" lower="${-120*PI/180}" upper="${120*PI/180}"/>
+      <safety_controller k_position="100" k_velocity="10" soft_lower_limit="${-120*PI/180 + 2*PI/180}" soft_upper_limit="${120*PI/180 - 2*PI/180}" />
+    </joint>
+
+    <link name="${name}_4_link">
+      <inertial>
+	<origin xyz="0 0 0" rpy="0 0 0"/>
+	<mass value="1.0"/>
+	<inertia ixx="0.01" ixy="0" ixz="0" iyy="0.01" iyz="0" izz="0.01" />
+      </inertial>
+
+      <visual>
+	<origin xyz="0 0 0" rpy="0 0 0" />
+	<geometry>
+	  <cylinder radius="${PRL100_radius}" length="${PRL100_length}"/>
+	</geometry>
+	<material name="Black" />
+      </visual>
+
+      <collision>
+	<origin xyz="0 0 0" rpy="0 0 0" />
+	<geometry>
+	  <cylinder radius="${PRL100_radius+0.02}" length="${PRL100_length+0.02}"/>
+	</geometry>
+      </collision>
+    </link>
+
+
+    <!-- ==================== joint 5 ==================== -->
+    <joint name="${name}_5_joint" type="revolute">
+      <origin xyz="0.0 ${ROBOT_DH_D_5} 0.0" rpy="${PI/2} 0.0 ${PI}" />
+      <axis xyz="0 0 1" />
+      <calibration rising="0.0"/>
+      <parent link="${name}_4_link" />
+      <child link="${name}_5_link" />
+      <limit effort="370" velocity="${30*PI/180}" lower="${-PI}" upper="${PI}"/>
+      <safety_controller k_position="100" k_velocity="10" soft_lower_limit="${-PI + 2*PI/180}" soft_upper_limit="${PI - 2*PI/180}" />
+    </joint>
+
+    <link name="${name}_5_link">
+      <inertial>
+	<origin xyz="0 0 ${-ROBOT_DH_D_5/2 - PRL80_radius/2 + PRL100_radius/2}" rpy="0 0 0"/>
+	<mass value="1.0"/>
+	<inertia ixx="0.01" ixy="0" ixz="0" iyy="0.01" iyz="0" izz="0.01" />
+      </inertial>
+
+      <visual>
+	<origin xyz="0 0 ${-ROBOT_DH_D_5/2 - PRL80_radius/2 + PRL100_radius/2}" rpy="0 0 0" />
+	<geometry>
+	  <cylinder radius="${PRL80_radius}" length="${PRL80_length}"/>
+	</geometry>
+	<material name="Yellow" />
+      </visual>
+
+      <collision>
+	<origin xyz="0 0 ${-ROBOT_DH_D_5/2 - PRL80_radius/2 + PRL100_radius/2}" rpy="0 0 0" />
+	<geometry>
+	  <cylinder radius="${PRL80_radius+0.02}" length="${PRL80_length}"/>
+	</geometry>
+      </collision>
+    </link>
+
+
+    <!-- ==================== joint 6 ==================== -->
+    <joint name="${name}_6_joint" type="revolute">
+      <origin xyz="0.0 0.0 0.0" rpy="${-PI/2} ${PI} 0.0" />
+      <axis xyz="0 0 1" />
+      <calibration rising="0.0"/>
+      <parent link="${name}_5_link" />
+      <child link="${name}_6_link" />
+      <limit effort="370" velocity="${30*PI/180}" lower="${-112*PI/180}" upper="${112*PI/180}"/>
+      <safety_controller k_position="100" k_velocity="10" soft_lower_limit="${-112*PI/180 + 2*PI/180}" soft_upper_limit="${112*PI/180 - 2*PI/180}" />
+    </joint>
+
+    <link name="${name}_6_link">
+      <inertial>
+	<origin xyz="0 0 0" rpy="0 0 0"/>
+	<mass value="1.0"/>
+	<inertia ixx="0.01" ixy="0" ixz="0" iyy="0.01" iyz="0" izz="0.01" />
+      </inertial>
+
+      <visual>
+	<origin xyz="0 0 0" rpy="0 0 0" />
+	<geometry>
+	  <cylinder radius="${PRL80_radius}" length="${PRL80_length}"/>
+	</geometry>
+	<material name="Black" />
+      </visual>
+
+      <collision>
+	<origin xyz="0 0 0" rpy="0 0 0" />
+	<geometry>
+	  <cylinder radius="${PRL80_radius+0.02}" length="${PRL80_length+0.02}"/>
+	</geometry>
+      </collision>
+    </link>
+
+
+    <!-- ==================== joint 7 ==================== -->
+    <joint name="${name}_7_joint" type="revolute">
+      <origin xyz="0.0 0.0 0.0" rpy="${PI/2} 0.0 ${PI}" />
+      <axis xyz="0 0 1" />
+      <calibration rising="0.0"/>
+      <parent link="${name}_6_link" />
+      <child link="${name}_7_link" />
+      <limit effort="370" velocity="${38*PI/180}" lower="${-PI-3*PI/180}" upper="${PI+3*PI/180}"/>
+      <safety_controller k_position="100" k_velocity="10" soft_lower_limit="${-PI - PI/180}" soft_upper_limit="${PI + PI/180}" />
+    </joint>
+
+    <link name="${name}_7_link">
+      <inertial>
+	<origin xyz="0 0 ${ROBOT_TOOL_LENGTH/2 + PRL80_radius/2 - paddle_handle_length_z}" rpy="0 0 0" />
+	<mass value="1.0"/>
+	<inertia ixx="0.01" ixy="0" ixz="0" iyy="0.01" iyz="0" izz="0.01" />
+      </inertial>
+
+      <visual>
+	<origin xyz="0 0 ${ROBOT_TOOL_LENGTH/2 + PRL80_radius/2 - paddle_handle_length_z}" rpy="0 0 0" />
+	<geometry>
+	  <cylinder radius="${PRL80_radius}" length="${PRL80_length}"/>
+	</geometry>
+	<material name="Yellow" />
+      </visual>
+
+      <collision>
+	<origin xyz="0 0 ${ROBOT_TOOL_LENGTH/2 + PRL80_radius/2 - paddle_handle_length_z}" rpy="0 0 0"/>
+	<geometry>
+	  <cylinder radius="${PRL80_radius+0.02}" length="${PRL80_length}"/>
+	</geometry>
+      </collision>
+    </link>
+
+    <!-- ==================== FT sensor ==================== -->
+
+    <joint name="${name}_FT_joint" type="fixed" >
+      <origin xyz="0.0 0.0 ${FT_sensor_distance}" rpy="0.0 0.0 0.0" />
+      <parent link="${name}_7_link" />
+      <child link="${name}_FT_sensor" />
+    </joint>
+    
+    <link name="${name}_FT_sensor">
+      <inertial>
+	<origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0" />
+	<mass value="1.0"/>
+	<inertia ixx="0.01" ixy="0" ixz="0" iyy="0.01" iyz="0" izz="0.01" />
+      </inertial>
+
+      <visual>
+	<origin xyz="0.0 0.0 0.03" rpy="0.0 0.0 0.0" />
+	<geometry>
+	  <cylinder radius="${PRL80_radius-0.005}" length="0.03"/>
+	</geometry>
+	<material name="Grey" />
+      </visual>
+
+      <collision>
+	<origin xyz="0.0 0.0 0.03" rpy="0.0 0.0 0.0"/>
+	<geometry>
+	  <cylinder radius="${PRL80_radius+0.02}" length="0.03"/>
+	</geometry>
+      </collision>
+    </link>
+    
+  </xacro:macro>
+
+</robot>

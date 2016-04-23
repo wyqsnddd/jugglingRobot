@@ -1,0 +1,182 @@
+<?xml version="1.0"?>
+<robot xmlns:sensor="http://playerstage.sourceforge.net/gazebo/xmlschema/#sensor"
+       xmlns:controller="http://playerstage.sourceforge.net/gazebo/xmlschema/#controller"
+       xmlns:interface="http://playerstage.sourceforge.net/gazebo/xmlschema/#interface"
+       xmlns:xacro="http://ros.org/wiki/xacro">
+
+  <include filename="$(find robotDescription)/urdf/torso/torso_common.xacro" />
+
+  <!-- <xacro:macro name="robot_torso" params="name parent *origin"> -->
+  <xacro:macro name="robot_torso" params="name  *origin">
+
+    <link name="${name}_link">
+      <inertial>
+        <mass value="20.0" />
+	<origin xyz = "0.0 0.0 0.0" rpy="0.0 0.0 0.0" />
+        <inertia ixx="3.0" ixy="0.0" ixz="0.0"
+                 iyy="3.0" iyz="0.0" izz="1.0" />
+      </inertial>
+
+      <visual>
+        <origin xyz = "0.0 0.0 0.0" rpy="0.0 0.0 0.0" />
+        <geometry>
+          <cylinder radius="${torso_radius}" length="${torso_length}"/>
+        </geometry>
+        <material name="Black" />
+      </visual>
+
+      <collision name="${name}_collision">
+        <origin xyz = "0.0 0.0 ${middle_plate_length_z/2}" rpy="0.0 0.0 0.0" />
+	<geometry>
+          <box size="${torso_radius*2} ${torso_radius*2} ${torso_length + middle_plate_length_z}"/>
+        </geometry>
+      </collision>
+    </link>
+    
+
+    <!-- middle plate, this is the plate that holds together the arms-->
+    <joint name="${name}_middle_plate_joint" type="fixed">
+      <origin xyz="0.0 0.0 ${torso_length/2 + middle_plate_length_z/2}" rpy="0.0 0.0 0.0" />
+      <parent link="${name}_link" />
+      <child link="${name}_middle_plate_link" />
+    </joint>
+
+    <link name="${name}_middle_plate_link">
+      <inertial>
+        <mass value="20.0" />
+	<origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0" />
+        <inertia ixx="1.0" ixy="0.0" ixz="0.0"
+                 iyy="2.0" iyz="0.0" izz="0.5" />
+      </inertial>
+
+      <visual>
+        <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0" />
+        <geometry>
+          <box size="${middle_plate_length_x} ${middle_plate_length_y} ${middle_plate_length_z}" />
+        </geometry>
+	<material name="Grey" />
+      </visual>
+
+      <collision name="${name}_middle_plate_collision">
+	<origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0" />
+        <geometry>
+          <box size="${middle_plate_length_x} ${middle_plate_length_y} ${middle_plate_length_z}" />
+        </geometry>
+      </collision>
+    </link>
+
+
+    <!-- top plate-->
+    <joint name="${name}_top_plate_joint" type="fixed">
+      <origin xyz="0.0 0.0 ${middle_plate_length_z/2 + top_plate_length_z/2}" rpy="0.0 0.0 0.0" />
+      <parent link="${name}_middle_plate_link" />
+      <child link="${name}_top_plate_link" />
+    </joint>
+
+    <link name="${name}_top_plate_link">
+      <inertial>
+        <mass value="20.0" />
+	<origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0" />
+        <inertia ixx="1.0" ixy="0.0" ixz="0.0"
+                 iyy="2.0" iyz="0.0" izz="0.5" />
+      </inertial>
+
+      <visual>
+        <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0" />
+        <geometry>
+          <box size="${top_plate_length_x} ${top_plate_length_y} ${top_plate_length_z}" />
+        </geometry>
+	<material name="Black" />
+      </visual>
+
+      <collision name="${name}_top_plate_collision">
+	<origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0" />
+        <geometry>
+          <box size="${top_plate_length_x} ${top_plate_length_y} ${top_plate_length_z}" />
+        </geometry>
+      </collision>
+    </link>
+
+
+    <!-- front plate -->
+    <joint name="${name}_front_plate_joint" type="fixed">
+      <origin xyz="0.0 ${middle_plate_length_y/2} 0.0" rpy="0.0 0.0 0.0" />
+      <parent link="${name}_middle_plate_link" />
+      <child link="${name}_front_plate_link" />
+    </joint>
+
+    <link name="${name}_front_plate_link">
+      <inertial>
+        <mass value="20.0" />
+	<origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0" />
+        <inertia ixx="1.0" ixy="0.0" ixz="0.0"
+                 iyy="2.0" iyz="0.0" izz="0.5" />
+      </inertial>
+
+      <visual>
+        <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0" />
+        <geometry>
+          <box size="${front_plate_length_x} ${front_plate_length_y} ${front_plate_length_z}" />
+        </geometry>
+	<material name="Black" />
+      </visual>
+
+      <collision name="${name}_front_plate_collision">
+	<origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0" />
+        <geometry>
+          <box size="${front_plate_length_x} ${front_plate_length_y} ${front_plate_length_z}" />
+        </geometry>
+      </collision>
+    </link>
+    
+    <!-- back plate -->
+    <joint name="${name}_back_plate_joint" type="fixed">
+      <origin xyz="0.0 ${-1*middle_plate_length_y/2} 0.0" rpy="0.0 0.0 0.0" />
+      <parent link="${name}_middle_plate_link" />
+      <child link="${name}_back_plate_link" />
+    </joint>
+
+    <link name="${name}_back_plate_link">
+      <inertial>
+        <mass value="20.0" />
+	<origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0" />
+        <inertia ixx="1.0" ixy="0.0" ixz="0.0"
+                 iyy="2.0" iyz="0.0" izz="0.5" />
+      </inertial>
+
+      <visual>
+        <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0" />
+        <geometry>
+          <box size="${back_plate_length_x} ${back_plate_length_y} ${back_plate_length_z}" />
+        </geometry>
+	<material name="Black" />
+      </visual>
+
+      <collision name="${name}_back_plate_collision">
+	<origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0" />
+        <geometry>
+          <box size="${back_plate_length_x} ${back_plate_length_y} ${back_plate_length_z}" />
+        </geometry>
+      </collision>
+    </link>
+
+
+    <!-- Defines the arms' base -->
+     <joint name="arm_base_joint" type="fixed">
+      <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0" />
+      <parent link="${name}_middle_plate_link" />
+      <child link="arm_base_link" />
+    </joint>
+
+    <link name="arm_base_link">
+      <visual>
+        <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0" />
+	<geometry>
+	  <box size="${middle_plate_length_x} ${middle_plate_length_y} ${middle_plate_length_z}" />
+	</geometry>
+      </visual>
+    </link>
+
+  </xacro:macro>
+
+</robot>

@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<robot>
+  
+  <property name="torso_radius" value="0.12" />	
+  <property name="torso_length" value="0.445" />
+
+  <property name="middle_plate_length_x" value="0.003" />
+  <property name="middle_plate_length_y" value="0.188" />
+  <property name="middle_plate_length_z" value="0.18" />
+
+  <property name="top_plate_length_x" value="0.1" />
+  <property name="top_plate_length_y" value="${middle_plate_length_y}" />
+  <property name="top_plate_length_z" value="0.003" />
+  
+  <property name="front_plate_length_x" value="${top_plate_length_x}" />
+  <property name="front_plate_length_y" value="0.003" />
+  <property name="front_plate_length_z" value="${middle_plate_length_z}" />
+
+  <property name="back_plate_length_x" value="${top_plate_length_x}" />
+  <property name="back_plate_length_y" value="${front_plate_length_y}" />
+  <property name="back_plate_length_z" value="${middle_plate_length_z}" />
+
+</robot>
