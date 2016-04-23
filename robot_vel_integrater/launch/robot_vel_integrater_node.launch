@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<launch>
+  
+  <!-- Bring up the joint velocity integrater node  -->
+  <node name="robot_velocity_integrater_node" pkg="robot_vel_integrater" type="robot_vel_integrater" cwd="node" respawn="false" output="screen" >
+    <rosparam command="load" file="$(find robot_vel_integrater)/config/robot_vel_integrater.yaml"/>
+  </node>
+
+</launch>
+
