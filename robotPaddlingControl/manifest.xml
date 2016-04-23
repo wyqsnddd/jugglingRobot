@@ -1,0 +1,23 @@
+<package>
+  <description brief="robotPaddlingControl">
+
+     robotPaddlingControl
+
+  </description>
+  <author>yuquan</author>
+  <license>BSD</license>
+  <review status="unreviewed" notes=""/>
+  <url>http://ros.org/wiki/robotPaddlingControl</url>
+  <depend package="roslib"/>
+  <depend package="roscpp"/>
+  <depend package="std_srvs"/>
+  <depend package="pr2_controllers_msgs"/>
+  <depend package="brics_actuator"/>
+  <rosdep name="eigen" />
+ 
+
+  <depend package="realtime_tools"/>
+
+</package>
+
+
