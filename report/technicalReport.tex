@@ -240,8 +240,7 @@ We can use dynamics in a practical setup to improve the real-time performance \c
   \end{center}
 \end{figure}
 
-
-Please find more details in the code. 
+In order to improve the coordination between the two arms, we use parallel threads to perform the \emph{rostopic} communication. Basically each arm uses an exclusive thread to communicate with ROS. Please find more details in the code. 
 
 \bibliographystyle{IEEEtran}
 \bibliography{ref}
