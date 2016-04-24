@@ -62,8 +62,7 @@ class robotPaddlingController{
    /* { */
    /*   return initializedKDL_; */
    /* } */
-
-
+   
    std::vector<double> jointPosL_;
    std::vector<double> jointPosR_;
  
@@ -73,18 +72,107 @@ class robotPaddlingController{
 
    boost::shared_ptr<rostopicCommunication> commmunicationPointer_;   
    
+
+   handJacobian * leftArmP_, * rightArmP_;
+     
+
+  struct loopControl{
+    int loopCount;
+    double samplingPeroid;
+    double time;
+
+    inline void init(){
+      loopCount = 0;
+      samplingPeroid = 0.01;
+      time = 0.0;
+    }
+
+
+  } loopController_;
+
+   /* double time_; ///< Execution time  */
+   /* double samplingPeroid_; */
+  class gurobiOptimizer{
+  private: 
+    struct optimizationParameters{
+      double gainKEquality, gainKInequality,
+	marginInequality;
+    }parameters;
+    double objValue_;
+    void clearCoefficents();
+    void initializeJointVelocityVariables( std::vector<
+					   boost::shared_ptr<GRBVar>
+					   > jointVVarPArray_
+					   );
+    
+  public:
+    boost::scoped_ptr<GRBEnv> envP_;
+    boost::scoped_ptr<GRBModel> modelP_;
+    boost::scoped_ptr<GRBQuadExpr> objP_;
+
+    double jointVelocityWeight_;
+    // optimization variables
+    std::vector<
+      boost::shared_ptr<GRBVar>
+      > leftJointVVarPArray_;
+    std::vector<
+      boost::shared_ptr<GRBVar>
+      > rightJointVVarPArray_;
+
+    singleArmTranslationConstraint * leftTranslationConstraintPointer_;
+    singleArmTranslationConstraint * rightTranslationConstraintPointer_;
+	
+    bool armQuaternion_;
+    singleArmQuaternionConstraint *leftQuaternionConstraintPointer_;
+    singleArmQuaternionConstraint *rightQuaternionConstraintPointer_;
+
+    Eigen::Matrix<double, 3, 3> iniRotation_;
+
+    gurobiOptimizer(ros::NodeHandle n, 
+		    handJacobian * leftArmPointer,
+		    handJacobian * rightArmPointer,
+		    std::vector<double> &jointPosL,
+		    std::vector<double> &jointPosR,
+		    double samplingPeroid,
+		    double pseudoTime
+		    );
+    ~gurobiOptimizer(){
+      
+      ROS_INFO("Gurobi: deconstructor");
+
+      if(armQuaternion_){
+	free(leftQuaternionConstraintPointer_);
+	free(rightQuaternionConstraintPointer_);
+      }
+
+
+
+    }
+
+    double readObj()const {
+      return objValue_;
+    }
+
+    
+  }* gurobiP_;
+
+
+   bool QuaProg();
  public:    
    robotPaddlingController();   
 
    ~robotPaddlingController(){   
    
-
+     free(leftArmP_);
+     free(rightArmP_);
+     /* gurobiP_->modelP_->write("QuaProg.lp"); */
+  
    }
 
    bool isOK(){
      return n_.ok();
    }
-   void publishJointVelocities();
+   void publishOptimalJointVelocities();
 };
 
 

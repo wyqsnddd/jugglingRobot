@@ -25,7 +25,7 @@ int main(int argc, char **argv)
   ros::Rate loop_rate(frequency);
 
   while(robotController.isOK() ){
-    robotController.publishJointVelocities();    
+    robotController.publishOptimalJointVelocities();    
     ros::spinOnce();
     loop_rate.sleep();
   }

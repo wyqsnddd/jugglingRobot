@@ -74,58 +74,58 @@ void rostopicCommunication::rightTopicCallback_(const brics_actuator::JointPosit
 
 void rostopicCommunication::readParameters_()
 {
-    // For two arms 
-    // Get joint names
-    XmlRpc::XmlRpcValue jointNamesXmlRpc, samplingPeroidxmlRpc;
-    std::vector<std::string> jointNames;
-    double testFrequency;
+  // For two arms 
+  // Get joint names
+  XmlRpc::XmlRpcValue jointNamesXmlRpc, samplingPeroidxmlRpc;
+  std::vector<std::string> jointNames;
+  double testFrequency;
 
-    if(n_.hasParam("joint_names")&&n_.hasParam("Sampling_peroid")){
-      n_.getParam("joint_names", jointNamesXmlRpc);
-      n_.getParam("Sampling_peroid", testFrequency);
-    }else{
-      ROS_ERROR("Parameter joint_names or sampling peroid not set, shutting down node...");
-      n_.shutdown();
-      // params_OK=false;
-    }
+  if(n_.hasParam("joint_names")&&n_.hasParam("Sampling_peroid")){
+    n_.getParam("joint_names", jointNamesXmlRpc);
+    n_.getParam("Sampling_peroid", testFrequency);
+  }else{
+    ROS_ERROR("Parameter joint_names or sampling peroid not set, shutting down node...");
+    n_.shutdown();
+    // params_OK=false;
+  }
 
 
-    /// Resize and assign of values to the JointNames
-    jointNames_.resize(jointNamesXmlRpc.size());
-    for(int i = 0; i < jointNamesXmlRpc.size(); i++){
-      jointNames_[i] = (std::string)jointNamesXmlRpc[i];
-    }
-    // samplingPeroid_ = testFrequency;
+  /// Resize and assign of values to the JointNames
+  jointNames_.resize(jointNamesXmlRpc.size());
+  for(int i = 0; i < jointNamesXmlRpc.size(); i++){
+    jointNames_[i] = (std::string)jointNamesXmlRpc[i];
+  }
+  // samplingPeroid_ = testFrequency;
     
-    /// initialize the std::vectors 
-    /// The velocities received 
-    leftJointVelocities_.resize(DOF);
-    leftJointVelocities_.assign(DOF, 0);
+  /// initialize the std::vectors 
+  /// The velocities received 
+  // leftJointVelocities_.resize(DOF);
+  // leftJointVelocities_.assign(DOF, 0);
     
-    rightJointVelocities_.resize(DOF);
-    rightJointVelocities_.assign(DOF, 0);
+  // rightJointVelocities_.resize(DOF);
+  // rightJointVelocities_.assign(DOF, 0);
 
-    leftJointPositions_.resize(DOF);
-    leftJointPositions_.assign(DOF, 0);
+  leftJointPositions_.resize(DOF);
+  leftJointPositions_.assign(DOF, 0);
 
-    rightJointPositions_.resize(DOF);
-    rightJointPositions_.assign(DOF, 0);
+  rightJointPositions_.resize(DOF);
+  rightJointPositions_.assign(DOF, 0);
 
-    /// read the initial values: 
+  /// read the initial values: 
 
-    XmlRpc::XmlRpcValue dualDofInitialXml;
-    if (n_.hasParam("joint_initial_values")){
-      n_.getParam("joint_initial_values", dualDofInitialXml);
-    }else{
-      ROS_ERROR("Parameter Dual_dof_lower is not set, shutting down node...");
-      n_.shutdown();
-      // params_OK=false;
-    }
+  XmlRpc::XmlRpcValue dualDofInitialXml;
+  if (n_.hasParam("joint_initial_values")){
+    n_.getParam("joint_initial_values", dualDofInitialXml);
+  }else{
+    ROS_ERROR("Parameter Dual_dof_lower is not set, shutting down node...");
+    n_.shutdown();
+    // params_OK=false;
+  }
 
-    for (unsigned int i = 0; i < DOF; i++){
-      leftJointPositions_[i] = static_cast<double>(dualDofInitialXml[i]);
-      rightJointPositions_[i] = static_cast<double>(dualDofInitialXml[i + DOF]);
-    }
+  for (unsigned int i = 0; i < DOF; i++){
+    leftJointPositions_[i] = static_cast<double>(dualDofInitialXml[i]);
+    rightJointPositions_[i] = static_cast<double>(dualDofInitialXml[i + DOF]);
+  }
 
 }
 void * rostopicCommunication::publishArmVelocity(void * data){
@@ -140,61 +140,65 @@ void * rostopicCommunication::publishArmVelocity(void * data){
   pthread_exit(NULL);
 
 }
-void rostopicCommunication::publishJointVelocities(){
+
+void rostopicCommunication::publishDualarmJointVelocities(
+						   std::vector<double> & leftJointVelocities,
+						   std::vector<double> & rightJointVelocities
+							  ){
   ros::Time now = ros::Time::now();
-      for(unsigned int i=0; i<DOF; i++){
-	leftMsg_.velocities[i].value = leftJointVelocities_[i];
-	leftMsg_.velocities[i].joint_uri =jointNames_[i];
-	rightMsg_.velocities[i].value = rightJointVelocities_[i];
-	rightMsg_.velocities[i].joint_uri =jointNames_[i + DOF];
-      }
+  for(unsigned int i=0; i<DOF; i++){
+    leftMsg_.velocities[i].value = leftJointVelocities[i];
+    leftMsg_.velocities[i].joint_uri =jointNames_[i];
+    rightMsg_.velocities[i].value = rightJointVelocities[i];
+    rightMsg_.velocities[i].joint_uri =jointNames_[i + DOF];
+  }
 	
-      leftMsg_.velocities[0].timeStamp = now;
-      rightMsg_.velocities[0].timeStamp = now;
+  leftMsg_.velocities[0].timeStamp = now;
+  rightMsg_.velocities[0].timeStamp = now;
       
-      int num_threads(2);
-      struct rostopicCommunication::publish_thread_data thread_data_array[2];
+  int num_threads(2);
+  struct rostopicCommunication::publish_thread_data thread_data_array[2];
 
-      pthread_t publish_threads[num_threads];
-      pthread_attr_t attr;
-      pthread_attr_init(&attr);  
-      pthread_attr_setdetachstate(&attr, PTHREAD_CREATE_JOINABLE);
+  pthread_t publish_threads[num_threads];
+  pthread_attr_t attr;
+  pthread_attr_init(&attr);  
+  pthread_attr_setdetachstate(&attr, PTHREAD_CREATE_JOINABLE);
 
-      // left arm velocities
-      thread_data_array[0].jointVelMsgPtr = &leftMsg_;
-      thread_data_array[0].publisherPtr = &leftJointVelocityPublisher_;
+  // left arm velocities
+  thread_data_array[0].jointVelMsgPtr = &leftMsg_;
+  thread_data_array[0].publisherPtr = &leftJointVelocityPublisher_;
 
-      // right arm velocities
-      thread_data_array[1].jointVelMsgPtr = &rightMsg_;
-      thread_data_array[1].publisherPtr = &rightJointVelocityPublisher_;
-
-
-      int lc = pthread_create(&publish_threads[0], &attr, &(rostopicCommunication::publishArmVelocity), (void *)&thread_data_array[0]);
-      if(lc!=0){
-	std::cout<<"In rostopicCommunication publish_velocities: creating thread 0 gives error code: "<<lc<<std::endl;
-      }
+  // right arm velocities
+  thread_data_array[1].jointVelMsgPtr = &rightMsg_;
+  thread_data_array[1].publisherPtr = &rightJointVelocityPublisher_;
 
 
-      int rc = pthread_create(&publish_threads[1], &attr, &(rostopicCommunication::publishArmVelocity), (void *)&thread_data_array[1]);
-      if(rc!=0){
-	std::cout<<"In rostopicCommunication publish_velocities: creating thread 1 gives error code: "<<rc<<std::endl;
-      }
+  int lc = pthread_create(&publish_threads[0], &attr, &(rostopicCommunication::publishArmVelocity), (void *)&thread_data_array[0]);
+  if(lc!=0){
+    std::cout<<"In rostopicCommunication publish_velocities: creating thread 0 gives error code: "<<lc<<std::endl;
+  }
 
-      pthread_attr_destroy(&attr);
 
-      void * lResultCatcher, * rResultCatcher; 
-      int lStatus = pthread_join(publish_threads[0], &lResultCatcher);
-      if(lStatus){
-	ROS_ERROR("return code from pthread_join() is %d ", lStatus);
-	exit(-1);
-      }
-      int rStatus = pthread_join(publish_threads[1], &rResultCatcher);
-      if(rStatus){
-	ROS_ERROR("return code from pthread_join() is %d ", rStatus);
-	exit(-1);
-      }
+  int rc = pthread_create(&publish_threads[1], &attr, &(rostopicCommunication::publishArmVelocity), (void *)&thread_data_array[1]);
+  if(rc!=0){
+    std::cout<<"In rostopicCommunication publish_velocities: creating thread 1 gives error code: "<<rc<<std::endl;
+  }
 
-      ROS_DEBUG("rostopicCommunication:: pthread_join() is finished ");
+  pthread_attr_destroy(&attr);
+
+  void * lResultCatcher, * rResultCatcher; 
+  int lStatus = pthread_join(publish_threads[0], &lResultCatcher);
+  if(lStatus){
+    ROS_ERROR("return code from pthread_join() is %d ", lStatus);
+    exit(-1);
+  }
+  int rStatus = pthread_join(publish_threads[1], &rResultCatcher);
+  if(rStatus){
+    ROS_ERROR("return code from pthread_join() is %d ", rStatus);
+    exit(-1);
+  }
+
+  ROS_DEBUG("rostopicCommunication:: pthread_join() is finished ");
   
 
 }

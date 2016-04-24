@@ -5,13 +5,14 @@
 #include <brics_actuator/JointVelocities.h>
 #include <brics_actuator/JointPositions.h>
 #include <pr2_controllers_msgs/JointTrajectoryControllerState.h>
-
+#include <vector>
 
 enum{
   DOF = 7
 };
 
 class rostopicCommunication{
+
  private:
   ros::Publisher leftJointVelocityPublisher_;
   ros::Publisher rightJointVelocityPublisher_;
@@ -29,8 +30,8 @@ class rostopicCommunication{
 
   std::vector<std::string> jointNames_;
   
-  std::vector<double> leftJointVelocities_;
-  std::vector<double> rightJointVelocities_;
+  /* std::vector<double> leftJointVelocities_; */
+  /* std::vector<double> rightJointVelocities_; */
   std::vector<double> leftJointPositions_;
   std::vector<double> rightJointPositions_;
 
@@ -50,6 +51,10 @@ class rostopicCommunication{
   ros::NodeHandle n_;
 
  public:
+  rostopicCommunication();
+    
+  ~rostopicCommunication(){
+  }
 
   std::vector<double>  readLeftArmJoints(){
     return leftJointPositions_;
@@ -57,13 +62,8 @@ class rostopicCommunication{
   std::vector<double>  readRightArmJoints(){
     return rightJointPositions_;
   }
-  rostopicCommunication();
-    
-  ~rostopicCommunication(){
-  }
-
-  /* void publishLeftJointVelocities(); */
-  /* void publishRightJointVelocities(); */
-  void publishJointVelocities();
+  void publishDualarmJointVelocities(std::vector<double> & leftJointVelocities,
+				     std::vector<double> & rightJointVelocities
+				     );
 };
 # endif

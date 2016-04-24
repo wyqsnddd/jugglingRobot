@@ -63,6 +63,7 @@ link_directories(${PROJECT_SOURCE_DIR}/ros/lib)
 
 
 rosbuild_add_library(robotPaddlingController
+  common/src/gurobiOptimizer.cpp
   common/src/robotPaddlingController.cpp)
 rosbuild_link_boost(robotPaddlingController ${BOOST_LIBS_ME}) 
 target_link_libraries(robotPaddlingController ${GUROBI_LIBRARIES})
